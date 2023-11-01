@@ -39,6 +39,8 @@ pyenv_tool = 'pyenv_tool.__main__:cli_main' # Legacy alias
 python = "^3.10"
 click = "^8.1.7"
 rich = "^13.6.0"
+requests = "^2.31.0"
+beautifulsoup4 = "^4.12.2"
 
 [tool.poetry.dev-dependencies]
 black = "^23.9.1"
