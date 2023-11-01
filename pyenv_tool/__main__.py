@@ -13,8 +13,11 @@ from pyenv_tool.pyenv import (  # , pyenv_update
     PYENV_NAME,
     Op,
     pyenv_available_versions,
+    pyenv_install,
     pyenv_installed_versions,
     pyenv_is_installed,
+    pyenv_set_shims,
+    pyenv_uninstall,
 )
 from pyenv_tool.python import python_supported_versions
 
@@ -99,6 +102,10 @@ def cli_upgrade(
         ),
     )
 
+    if len(deltas) <= 0:
+        rprint("No changes required.")
+        return 0
+
     if dry_run:
         rprint("Planned Changes:")
         for ver, op in sorted(deltas, reverse=True):
@@ -108,6 +115,37 @@ def cli_upgrade(
                 rprint(f"  - Remove  [remove]{ver.fixed_width}[/remove]")
             else:
                 raise ValueError(f"Unexpected Operation: {op!s}")
+
+    else:
+        to_install = sorted(
+            (ver for ver, op in deltas if op is Op.INSTALL),
+            reverse=True,
+        )
+        to_remove = sorted(
+            (ver for ver, op in deltas if op is Op.REMOVE),
+            reverse=True,
+        )
+
+        for v in to_install:
+            rprint(f"Installing {v!s}...")
+            out = pyenv_install(v)
+            logger.debug(out)
+            break
+
+        for v in to_remove:
+            rprint(f"Removing {v!s}...")
+            pyenv_uninstall(v)
+
+        main_versions = {v.main for v in pyenv_installed_versions()}
+        latest_versions = sorted(
+            (
+                max(v for v in installed_versions if v.main == main)
+                for main in main_versions
+            ),
+            reverse=True,
+        )
+
+        pyenv_set_shims(*latest_versions)
 
     return 0
 

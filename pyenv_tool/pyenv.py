@@ -31,8 +31,14 @@ def pyenv_is_installed() -> bool:
     return pyenv_path is not None
 
 
-def pyenv_execute(*args: str) -> str:
+def pyenv_execute(*args: str, dry_run: bool = False) -> str:
     """Execute pyenv with the provided arguments and return the output."""
+    logger = logging.getLogger(__name__)
+    logger.info("Executing: " + " ".join([PYENV_NAME, *args]))
+
+    if dry_run:
+        return ""
+
     ps = subprocess.run(
         [PYENV_NAME, *args],
         capture_output=True,
@@ -77,8 +83,12 @@ def pyenv_installed_versions() -> Iterator[PyVer]:
     """Determine which python shims are currently installed."""
     logger = logging.getLogger(__name__)
 
-    for line in pyenv_execute("version").splitlines():
-        ident = line.split(" ")[0].strip().lower()
+    for line in pyenv_execute("versions").splitlines():
+        parts = line.strip().split()
+
+        ident = parts[0]
+        if parts[0] == "*":
+            ident = parts[1]
 
         if ident == "system":
             continue
@@ -91,3 +101,18 @@ def pyenv_installed_versions() -> Iterator[PyVer]:
 
         logger.debug(f"Found installed version {ver!s}")
         yield ver
+
+
+def pyenv_install(v: PyVer) -> None:
+    """Install a python version."""
+    pyenv_execute("install", "--force", str(v))
+
+
+def pyenv_uninstall(v: PyVer) -> None:
+    """Install a python version."""
+    pyenv_execute("uninstall", "--force", str(v))
+
+
+def pyenv_set_shims(*versions: PyVer) -> None:
+    """Set shim priority."""
+    pyenv_execute("global", "system", *(str(v) for v in versions))
