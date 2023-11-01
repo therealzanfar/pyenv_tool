@@ -4,10 +4,11 @@ import re
 from enum import Enum
 from typing import ClassVar, Iterable
 
-# import requests
-# from bs4 import BeautifulSoup
+import requests
+from bs4 import BeautifulSoup
 
 PYTHON_URL = "https://www.python.org"
+PYTHON_DOWNLOADS = f"{PYTHON_URL}/downloads"
 
 MainVersion = tuple[int, int]
 
@@ -150,23 +151,13 @@ class VersionStatus(str, Enum):
 
 def python_supported_versions() -> Iterable[PyVer]:
     """Scrape the Python website for currently supported versions."""
-    # versions: dict[Version, VersionStatus] = {}
+    rsp = requests.get(PYTHON_DOWNLOADS)
+    rsp.raise_for_status()
 
-    # rsp = requests.get(f"{PYTHON_URL}/downloads")
-    # rsp.raise_for_status()
+    soup = BeautifulSoup(rsp.text, "html.parser")
+    for v in soup.find("div", class_="active-release-list-widget").find_all("li"):
+        ver = PyVer.parse(v.find("span", class_="release-version").text + ".0")
+        status = VersionStatus(v.find("span", class_="release-status").text)
 
-    # soup = BeautifulSoup(rsp.text, "html.parser")
-    # for v in soup.find("div", class_="active-release-list-widget").find_all("li"):
-    #     ver = Version.parse(v.find("span", class_="release-version").text + ".0")
-    #     status = VersionStatus(v.find("span", class_="release-status").text)
-
-    #     if status in [VersionStatus.BUGFIX, VersionStatus.SECURITY]:
-    #         yield ver
-
-    yield from (
-        PyVer(3, 12),
-        PyVer(3, 11),
-        PyVer(3, 10),
-        PyVer(3, 9),
-        PyVer(3, 8),
-    )
+        if status in [VersionStatus.BUGFIX, VersionStatus.SECURITY]:
+            yield ver
