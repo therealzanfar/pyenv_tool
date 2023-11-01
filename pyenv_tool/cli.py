@@ -2,9 +2,21 @@
 
 import logging
 
+from rich.console import Console
 from rich.logging import RichHandler
+from rich.theme import Theme
 
 CLICK_CONTEXT = {"help_option_names": ["-h", "--help"]}
+
+RICH_THEME = Theme(
+    {
+        "install": "bold green",
+        "remove": "bold red",
+    },
+    inherit=False,
+)
+
+rprint = Console(theme=RICH_THEME).print
 
 
 def setup_logging(verbosity: int = 0, force: bool = False) -> None:
