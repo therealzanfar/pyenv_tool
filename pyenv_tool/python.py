@@ -2,15 +2,15 @@
 
 import re
 from enum import Enum
-from typing import ClassVar, Iterable
+from typing import ClassVar, Iterable, Tuple
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 PYTHON_URL = "https://www.python.org"
 PYTHON_DOWNLOADS = f"{PYTHON_URL}/downloads"
 
-MainVersion = tuple[int, int]
+MainVersion = Tuple[int, int]
 
 
 class PyVer:
@@ -65,7 +65,7 @@ class PyVer:
         """Main Version."""
         return (self.major, self.minor)
 
-    def as_tuple(self) -> tuple[int, int, int, str, str]:
+    def as_tuple(self) -> Tuple[int, int, int, str, str]:
         """PyVer represented as a Tuple."""
         return (self.major, self.minor, self.patch, self.prerelease, self.build)
 
@@ -90,37 +90,37 @@ class PyVer:
             s += f"+{self.build}"
         return s
 
-    def __eq__(self, other: "PyVer") -> bool:
+    def __eq__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             raise NotImplementedError()
 
         return self.as_tuple() == other.as_tuple()
 
-    def __ne__(self, other: "PyVer") -> bool:
+    def __ne__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             raise NotImplementedError()
 
         return self.as_tuple() != other.as_tuple()
 
-    def __gt__(self, other: "PyVer") -> bool:
+    def __gt__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             raise NotImplementedError()
 
         return self.as_tuple() > other.as_tuple()
 
-    def __ge__(self, other: "PyVer") -> bool:
+    def __ge__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             raise NotImplementedError()
 
         return self.as_tuple() >= other.as_tuple()
 
-    def __lt__(self, other: "PyVer") -> bool:
+    def __lt__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             raise NotImplementedError()
 
         return self.as_tuple() < other.as_tuple()
 
-    def __le__(self, other: "PyVer") -> bool:
+    def __le__(self, other: object) -> bool:
         if not isinstance(other, self.__class__):
             raise NotImplementedError()
 
@@ -155,9 +155,15 @@ def python_supported_versions() -> Iterable[PyVer]:
     rsp.raise_for_status()
 
     soup = BeautifulSoup(rsp.text, "html.parser")
-    for v in soup.find("div", class_="active-release-list-widget").find_all("li"):
-        ver = PyVer.parse(v.find("span", class_="release-version").text + ".0")
-        status = VersionStatus(v.find("span", class_="release-status").text)
+    div = soup.find("div", class_="active-release-list-widget")
+    if not isinstance(div, Tag):
+        return
+
+    lis = div.find_all("li")
+
+    for li in lis:
+        ver = PyVer.parse(li.find("span", class_="release-version").text + ".0")
+        status = VersionStatus(li.find("span", class_="release-status").text)
 
         if status in [VersionStatus.BUGFIX, VersionStatus.SECURITY]:
             yield ver

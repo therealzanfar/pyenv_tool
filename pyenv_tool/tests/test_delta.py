@@ -1,5 +1,7 @@
 """Test the change-calculating code."""
 
+from typing import List, Tuple
+
 import pytest
 
 from pyenv_tool import calculate_changes
@@ -110,12 +112,12 @@ from pyenv_tool.python import PyVer
     ],
 )
 def test_delta(  # noqa: PLR0913
-    supported_versions: list[PyVer],
-    available_versions: list[PyVer],
-    installed_versions: list[PyVer],
+    supported_versions: List[PyVer],
+    available_versions: List[PyVer],
+    installed_versions: List[PyVer],
     keep_bugfix: bool,
     remove_minor: bool,
-    results: list[tuple[PyVer, Op]],
+    results: List[Tuple[PyVer, Op]],
 ) -> None:
     changes = calculate_changes(
         supported_versions,

@@ -11,7 +11,7 @@ __maintainer__ = __author__
 __status__ = "Prototype"
 
 import logging
-from typing import Iterable, Sequence
+from typing import Iterable, Sequence, Tuple
 
 from pyenv_tool.pyenv import Op
 from pyenv_tool.python import PyVer
@@ -23,7 +23,7 @@ def calculate_changes(  # noqa: C901
     installed_versions: Sequence[PyVer],
     keep_bugfix: bool = False,
     remove_minor: bool = False,
-) -> Iterable[tuple[PyVer, Op]]:
+) -> Iterable[Tuple[PyVer, Op]]:
     """Calculate what changes need to be made."""
     logger = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ def calculate_changes(  # noqa: C901
 
         if not keep_bugfix:
             for v in installed:
-                if v != latest:
+                if latest is not None and v != latest:
                     logger.debug(
                         f"Outdated {v.major}.{v.minor:02d} bugfix "
                         f"({v!s}) needs to be removed.",

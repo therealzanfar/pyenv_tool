@@ -28,22 +28,31 @@ array of up-to-date Python executables. By default, this command will:
 
 This behavior can be changed with the following command arguments:
 
-`--keep-bugfix`
+`--keep-bugfix/-k`
     Keep any existing python versions even if a newer bugfix is available.
 
-`--remove-minor`
+`--remove-minor/-r`
     Remove ALL unsupported python versions, including the latest bugfix.
 
 `--no-update`
     Do not update the pyenv tool or the list of available versions
 
-`--dry-run`
+`--dry-run/-n`
     Check the system and determine the necessary changes, but do not execute
     them.
 
 ## Installation
 
+To install `pyenv_tool`, run the following command. `python3` should point to
+whatever Python binary you want to install it under, version 3.8 or later.
+
     python3 -m pip install git+https://github.com/therealzanfar/pyenv_tool.git
+
+### Prerequisites
+
+This tool requires `pyenv` to be installed and available in the path. The
+`pyenv` project can be found at https://github.com/pyenv/pyenv along with
+documentation and installation instructions.
 
 ## Credits
 

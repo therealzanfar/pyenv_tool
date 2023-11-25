@@ -60,6 +60,14 @@ def cli_main(verbose: int = 0) -> int:
     help="Remove all unsupported python versions, including the latest bugfix.",
 )
 @click.option(
+    "--no-update",
+    is_flag=True,
+    flag_value=True,
+    default=False,
+    type=bool,
+    help="Do not update the pyenv tool or the list of available versions",
+)
+@click.option(
     "--dry-run",
     "-d",
     is_flag=True,

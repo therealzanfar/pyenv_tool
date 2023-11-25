@@ -103,16 +103,16 @@ def pyenv_installed_versions() -> Iterator[PyVer]:
         yield ver
 
 
-def pyenv_install(v: PyVer) -> None:
+def pyenv_install(v: PyVer) -> str:
     """Install a python version."""
-    pyenv_execute("install", "--force", str(v))
+    return pyenv_execute("install", "--force", str(v))
 
 
-def pyenv_uninstall(v: PyVer) -> None:
+def pyenv_uninstall(v: PyVer) -> str:
     """Install a python version."""
-    pyenv_execute("uninstall", "--force", str(v))
+    return pyenv_execute("uninstall", "--force", str(v))
 
 
-def pyenv_set_shims(*versions: PyVer) -> None:
+def pyenv_set_shims(*versions: PyVer) -> str:
     """Set shim priority."""
-    pyenv_execute("global", "system", *(str(v) for v in versions))
+    return pyenv_execute("global", "system", *(str(v) for v in versions))
