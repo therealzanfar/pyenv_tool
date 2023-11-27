@@ -61,13 +61,17 @@ class PyVer:
         self.build = build
 
     @property
-    def main(self) -> MainVersion:
+    def main(self) -> "PyVer":
         """Main Version."""
-        return (self.major, self.minor)
+        return self.__class__(self.major, self.minor)
 
     def as_tuple(self) -> Tuple[int, int, int, str, str]:
         """PyVer represented as a Tuple."""
         return (self.major, self.minor, self.patch, self.prerelease, self.build)
+
+    def main_format(self) -> str:
+        """Format just the main version part."""
+        return f"{self.major:d}.{self.minor:d}"
 
     def __str__(self) -> str:
         s = f"{self.major:d}.{self.minor:d}.{self.patch:d}"
@@ -79,6 +83,9 @@ class PyVer:
 
     def __repr__(self) -> str:
         return f"{self.__class__.__qualname__}({self!s})"
+
+    def __hash__(self) -> int:
+        return hash(self.as_tuple())
 
     @property
     def fixed_width(self) -> str:
@@ -147,9 +154,10 @@ class VersionStatus(str, Enum):
     PRERELEASE = "prerelease"
     BUGFIX = "bugfix"
     SECURITY = "security"
+    UNSUPPORTED = "unsupported"
 
 
-def python_supported_versions() -> Iterable[PyVer]:
+def python_supported_versions() -> Iterable[Tuple[PyVer, VersionStatus]]:
     """Scrape the Python website for currently supported versions."""
     rsp = requests.get(PYTHON_DOWNLOADS)
     rsp.raise_for_status()
@@ -166,4 +174,4 @@ def python_supported_versions() -> Iterable[PyVer]:
         status = VersionStatus(li.find("span", class_="release-status").text)
 
         if status in [VersionStatus.BUGFIX, VersionStatus.SECURITY]:
-            yield ver
+            yield (ver, status)

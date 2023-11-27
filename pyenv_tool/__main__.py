@@ -19,7 +19,7 @@ from pyenv_tool.pyenv import (  # , pyenv_update
     pyenv_set_shims,
     pyenv_uninstall,
 )
-from pyenv_tool.python import python_supported_versions
+from pyenv_tool.python import VersionStatus, python_supported_versions
 
 
 @click.group(context_settings=CLICK_CONTEXT)
@@ -69,7 +69,7 @@ def cli_main(verbose: int = 0) -> int:
 )
 @click.option(
     "--dry-run",
-    "-d",
+    "-n",
     is_flag=True,
     flag_value=True,
     default=False,
@@ -95,10 +95,13 @@ def cli_upgrade(
         # pyenv_update()
 
     rprint("Scraping supported Python versions...")
-    supported_versions = list(python_supported_versions())
+    supported_status = dict(python_supported_versions())
+    supported_versions = set(supported_status.keys())
 
-    available_versions = list(pyenv_available_versions())
-    installed_versions = list(pyenv_installed_versions())
+    available_versions = {
+        v for v in pyenv_available_versions() if v.prerelease == "" and v.build == ""
+    }
+    installed_versions = set(pyenv_installed_versions())
 
     deltas = list(
         calculate_changes(
@@ -110,21 +113,61 @@ def cli_upgrade(
         ),
     )
 
+    print()
+    rprint("Version Report:")
+    main_versions = set(supported_versions) | {v.main for v in installed_versions}
+
+    for m in sorted(main_versions):
+        s = supported_status.get(m, VersionStatus.UNSUPPORTED)
+
+        rprint(
+            f"  [bold]Python {m.main_format()} "
+            f"([{s.value}]{s.value}[/{s.value}])[/bold]",
+        )
+
+        installed = {v for v in installed_versions if v.main == m}
+        latest = max(v for v in available_versions if v.main == m)
+
+        for v in sorted(installed):
+            if s is VersionStatus.UNSUPPORTED:
+                if v == latest:
+                    rprint(
+                        f"    {v} (installed, [ver_u]unsupported[/ver_u], [ver_l]latest[/ver_l])",
+                    )
+                else:
+                    rprint(
+                        f"    {v} (installed, [ver_u]unsupported[/ver_u])",
+                    )
+
+                if latest not in installed:
+                    rprint(
+                        f"    {latest} ([ver_u]unsupported[/ver_u], [ver_l]latest[/ver_l])",
+                    )
+
+            else:
+                if v == latest:
+                    rprint(f"    {v} (installed, [ver_l]latest[/ver_l])")
+                else:
+                    rprint(f"    {v} (installed, [ver_b]out-of-date[/ver_b])")
+
+                if latest not in installed:
+                    rprint(f"    {latest} ([ver_l]latest[/ver_l])")
+
+        print()
+
     if len(deltas) <= 0:
         rprint("No changes required.")
         return 0
 
-    if dry_run:
-        rprint("Planned Changes:")
-        for ver, op in sorted(deltas, reverse=True):
-            if op is Op.INSTALL:
-                rprint(f"  + Install [install]{ver.fixed_width}[/install]")
-            elif op is Op.REMOVE:
-                rprint(f"  - Remove  [remove]{ver.fixed_width}[/remove]")
-            else:
-                raise ValueError(f"Unexpected Operation: {op!s}")
+    for ver, op in sorted(deltas, reverse=True):
+        if op is Op.INSTALL:
+            rprint(f"  + Install [install]{ver.fixed_width}[/install]")
+        elif op is Op.REMOVE:
+            rprint(f"  - Remove  [remove]{ver.fixed_width}[/remove]")
+        else:
+            raise ValueError(f"Unexpected Operation: {op!s}")
 
-    else:
+    if not dry_run:
         to_install = sorted(
             (ver for ver, op in deltas if op is Op.INSTALL),
             reverse=True,

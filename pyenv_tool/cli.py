@@ -12,6 +12,12 @@ RICH_THEME = Theme(
     {
         "install": "bold green",
         "remove": "bold red",
+        "bugfix": "bold green",
+        "security": "bold yellow",
+        "unsupported": "bold red",
+        "ver_u": "yellow",
+        "ver_b": "yellow",
+        "ver_l": "green",
     },
     inherit=False,
 )

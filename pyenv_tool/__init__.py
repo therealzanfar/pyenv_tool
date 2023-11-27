@@ -11,16 +11,16 @@ __maintainer__ = __author__
 __status__ = "Prototype"
 
 import logging
-from typing import Iterable, Sequence, Tuple
+from typing import Iterable, Tuple
 
 from pyenv_tool.pyenv import Op
 from pyenv_tool.python import PyVer
 
 
 def calculate_changes(  # noqa: C901
-    supported_versions: Sequence[PyVer],
-    available_versions: Sequence[PyVer],
-    installed_versions: Sequence[PyVer],
+    supported_versions: Iterable[PyVer],
+    available_versions: Iterable[PyVer],
+    installed_versions: Iterable[PyVer],
     keep_bugfix: bool = False,
     remove_minor: bool = False,
 ) -> Iterable[Tuple[PyVer, Op]]:
