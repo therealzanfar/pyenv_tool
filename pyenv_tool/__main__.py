@@ -7,9 +7,9 @@ import sys
 
 import click
 
-from pyenv_tool import calculate_changes
+from pyenv_tool import calculate_changes, print_version_report
 from pyenv_tool.cli import CLICK_CONTEXT, rprint, setup_logging
-from pyenv_tool.pyenv import (  # , pyenv_update
+from pyenv_tool.pyenv import (
     PYENV_NAME,
     Op,
     pyenv_available_versions,
@@ -18,8 +18,9 @@ from pyenv_tool.pyenv import (  # , pyenv_update
     pyenv_is_installed,
     pyenv_set_shims,
     pyenv_uninstall,
+    pyenv_update,
 )
-from pyenv_tool.python import VersionStatus, python_supported_versions
+from pyenv_tool.python import python_supported_versions
 
 
 @click.group(context_settings=CLICK_CONTEXT)
@@ -92,7 +93,7 @@ def cli_upgrade(
 
     if not no_update:
         rprint("Updating pyenv...")
-        # pyenv_update()
+        pyenv_update()
 
     rprint("Scraping supported Python versions...")
     supported_status = dict(python_supported_versions())
@@ -114,46 +115,11 @@ def cli_upgrade(
     )
 
     print()
-    rprint("Version Report:")
-    main_versions = set(supported_versions) | {v.main for v in installed_versions}
-
-    for m in sorted(main_versions):
-        s = supported_status.get(m, VersionStatus.UNSUPPORTED)
-
-        rprint(
-            f"  [bold]Python {m.main_format()} "
-            f"([{s.value}]{s.value}[/{s.value}])[/bold]",
-        )
-
-        installed = {v for v in installed_versions if v.main == m}
-        latest = max(v for v in available_versions if v.main == m)
-
-        for v in sorted(installed):
-            if s is VersionStatus.UNSUPPORTED:
-                if v == latest:
-                    rprint(
-                        f"    {v} (installed, [ver_u]unsupported[/ver_u], [ver_l]latest[/ver_l])",
-                    )
-                else:
-                    rprint(
-                        f"    {v} (installed, [ver_u]unsupported[/ver_u])",
-                    )
-
-                if latest not in installed:
-                    rprint(
-                        f"    {latest} ([ver_u]unsupported[/ver_u], [ver_l]latest[/ver_l])",
-                    )
-
-            else:
-                if v == latest:
-                    rprint(f"    {v} (installed, [ver_l]latest[/ver_l])")
-                else:
-                    rprint(f"    {v} (installed, [ver_b]out-of-date[/ver_b])")
-
-                if latest not in installed:
-                    rprint(f"    {latest} ([ver_l]latest[/ver_l])")
-
-        print()
+    print_version_report(
+        supported_status,
+        available_versions,
+        installed_versions,
+    )
 
     if len(deltas) <= 0:
         rprint("No changes required.")

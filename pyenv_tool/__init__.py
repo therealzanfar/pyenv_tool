@@ -11,10 +11,11 @@ __maintainer__ = __author__
 __status__ = "Prototype"
 
 import logging
-from typing import Iterable, Tuple
+from typing import Dict, Iterable, Tuple
 
+from pyenv_tool.cli import rprint
 from pyenv_tool.pyenv import Op
-from pyenv_tool.python import PyVer
+from pyenv_tool.python import PyVer, VersionStatus
 
 
 def calculate_changes(  # noqa: C901
@@ -84,3 +85,55 @@ def calculate_changes(  # noqa: C901
                         f"({v!s}) needs to be removed.",
                     )
                     yield (v, Op.REMOVE)
+
+
+def print_version_report(
+    supported_status: Dict[PyVer, VersionStatus],
+    available_versions: Iterable[PyVer],
+    installed_versions: Iterable[PyVer],
+) -> None:
+    """Pretty-print a report of the supported, installed, and available versions."""
+    rprint("Version Report:")
+
+    supported_versions = set(supported_status.keys())
+    main_versions = set(supported_versions) | {v.main for v in installed_versions}
+
+    for m in sorted(main_versions):
+        s = supported_status.get(m, VersionStatus.UNSUPPORTED)
+
+        rprint(
+            f"  [bold]Python {m.main_format()} "
+            f"([{s.value}]{s.value}[/{s.value}])[/bold]",
+        )
+
+        installed = {v for v in installed_versions if v.main == m}
+        latest = max(v for v in available_versions if v.main == m)
+
+        for v in sorted(installed):
+            if s is VersionStatus.UNSUPPORTED:
+                if v == latest:
+                    rprint(
+                        f"    {v} (installed, [ver_u]unsupported[/ver_u],"
+                        f" [ver_l]latest[/ver_l])",
+                    )
+                else:
+                    rprint(
+                        f"    {v} (installed, [ver_u]unsupported[/ver_u])",
+                    )
+
+                if latest not in installed:
+                    rprint(
+                        f"    {latest} ([ver_u]unsupported[/ver_u],"
+                        f" [ver_l]latest[/ver_l])",
+                    )
+
+            else:
+                if v == latest:
+                    rprint(f"    {v} (installed, [ver_l]latest[/ver_l])")
+                else:
+                    rprint(f"    {v} (installed, [ver_b]out-of-date[/ver_b])")
+
+                if latest not in installed:
+                    rprint(f"    {latest} ([ver_l]latest[/ver_l])")
+
+        print()
