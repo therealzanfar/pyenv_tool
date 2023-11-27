@@ -8,6 +8,31 @@ be considered porcelain to pyenv's plumbing, but NOT as a complete interface
 replacement. Many pyenv operations will still need to be perfomed via pyenv's
 interface.
 
+## Operational Goal
+
+`pyenvtool` is built around the concept of a "main" version which is composed
+of a major and minor version, but ignores any bugfix, prerelease, or build
+information. That is, `3.11.0`, `3.11-dev`, and `3.11.2` are all the same
+"main" version of `3.11`.
+
+`pyenvtool` operates with the goal that any existing main version of Python
+should be left on the system, but updated if possible, and any supported main
+versions of Python should be installed if absent.
+
+* For every main version that is _supported_ and _not present_ on the system:
+  * The latest bugfix version is installed
+
+* For every main version that is _supported_ and _present_ on the system:
+  * The latest bugfix version is installed if not already present
+  * Bugfix versions *prior* to the latest are uninstalled, unless the
+    `--keep-bugfix` option is provided
+
+* For every main version that is _unsupported_ and _present_ on the system:
+  * The latest bugfix version is installed if not already present, unless the
+    `--remove-minor` option is provided
+  * Bugfix versions *prior* to the latest are uninstalled, unless the
+    `--keep-bugfix` option is provided
+
 ## Usage
 
 Complete help documentation can be found by running `pyenvtool --help`, the
