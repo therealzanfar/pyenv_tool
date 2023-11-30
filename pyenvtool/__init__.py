@@ -18,7 +18,7 @@ from pyenvtool.pyenv import Op
 from pyenvtool.python import PyVer, VersionStatus
 
 
-def calculate_changes(  # noqa: C901
+def calculate_changes(  # noqa: C901, PLR0912
     supported_versions: Iterable[PyVer],
     available_versions: Iterable[PyVer],
     installed_versions: Iterable[PyVer],
@@ -36,15 +36,22 @@ def calculate_changes(  # noqa: C901
     main_old = {i.main for i in installed_versions if i.main not in main_sup}
 
     for s in main_sup:
+        logger.debug(f"Checking supported version {s}")
         latest = None
-        avail = [v for v in available_versions if v.main == s]
+        available = sorted(
+            (v for v in available_versions if v.main == s),
+            reverse=True,
+        )
         installed = sorted(
             (v for v in installed_versions if v.main == s),
             reverse=True,
         )
 
-        if len(avail) > 0:
-            latest = max(avail)
+        logger.debug(f"Installed: {installed}")
+        logger.debug(f"Available: {available}")
+
+        if len(available) > 0:
+            latest = max(available)
 
             if latest not in installed:
                 logger.debug(
@@ -63,25 +70,42 @@ def calculate_changes(  # noqa: C901
                     yield (v, Op.REMOVE)
 
     for o in main_old:
+        logger.debug(f"Checking unsupported version {o}")
+        latest = None
         installed = sorted(
             (v for v in installed_versions if v.main == o),
             reverse=True,
         )
+        available = sorted(
+            (v for v in available_versions if v.main == o),
+            reverse=True,
+        )
 
-        if len(installed) > 0:
-            latest = max(installed)
+        logger.debug(f"Installed: {installed}")
+        logger.debug(f"Available: {available}")
 
+        if len(available) > 0:
+            latest = max(available)
+
+            if latest not in installed and not remove_minor:
+                logger.debug(
+                    f"Latest   {latest.major}.{latest.minor:02d} bugfix ({latest!s}) "
+                    "needs to be installed.",
+                )
+                yield (latest, Op.INSTALL)
+
+            if latest in installed and remove_minor:
+                logger.debug(
+                    f"Outdated {latest.major}.{latest.minor:02d} bugfix ({latest!s}) "
+                    "needs to be removed.",
+                )
+                yield (latest, Op.REMOVE)
+
+        if not keep_bugfix:
             for v in installed:
-                if v == latest and remove_minor:
+                if latest is not None and v != latest:
                     logger.debug(
-                        f"Unsupported {v.major}.{v.minor:02d} minor "
-                        f"({v!s}) needs to be removed.",
-                    )
-                    yield (v, Op.REMOVE)
-
-                elif v != latest and not keep_bugfix:
-                    logger.debug(
-                        f"Unsupported {v.major}.{v.minor:02d} bugfix "
+                        f"Outdated {v.major}.{v.minor:02d} bugfix "
                         f"({v!s}) needs to be removed.",
                     )
                     yield (v, Op.REMOVE)
