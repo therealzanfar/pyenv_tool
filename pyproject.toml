@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pyenvtool"
-version = "0.1.3"
+version = "1.0.0"
 description = "Convienience wrapper for common pyenv operations."
 authors = ["Matthew Wyant <me@matthewwyant.com>"]
 license = "GPL-3.0-or-later"
@@ -9,8 +9,7 @@ repository = "https://github.com/therealzanfar/pyenvtool"
 
 # https://pypi.org/classifiers/
 classifiers = [
-    "Development Status :: 4 - Beta",
-    # "Development Status :: 5 - Production/Stable",
+    "Development Status :: 5 - Production/Stable",
     # "Development Status :: 6 - Mature",
     # "Development Status :: 7 - Inactive",
     "Environment :: Console",
