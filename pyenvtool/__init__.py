@@ -13,9 +13,9 @@ __status__ = "Prototype"
 import logging
 from typing import Dict, Iterable, Tuple
 
-from pyenv_tool.cli import rprint
-from pyenv_tool.pyenv import Op
-from pyenv_tool.python import PyVer, VersionStatus
+from pyenvtool.cli import rprint
+from pyenvtool.pyenv import Op
+from pyenvtool.python import PyVer, VersionStatus
 
 
 def calculate_changes(  # noqa: C901

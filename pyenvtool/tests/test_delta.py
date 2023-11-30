@@ -4,9 +4,9 @@ from typing import List, Tuple
 
 import pytest
 
-from pyenv_tool import calculate_changes
-from pyenv_tool.pyenv import Op
-from pyenv_tool.python import PyVer
+from pyenvtool import calculate_changes
+from pyenvtool.pyenv import Op
+from pyenvtool.python import PyVer
 
 
 @pytest.mark.parametrize(

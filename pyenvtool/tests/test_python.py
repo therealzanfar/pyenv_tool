@@ -2,7 +2,7 @@
 
 import requests_mock
 
-from pyenv_tool.python import PYTHON_DOWNLOADS, PyVer, python_supported_versions
+from pyenvtool.python import PYTHON_DOWNLOADS, PyVer, python_supported_versions
 
 PYTHON_HTML_OUTPUT = """
 <div class="row active-release-list-widget">
@@ -75,7 +75,7 @@ def test_python_supported() -> None:
     with requests_mock.Mocker() as mock_requests:
         mock_requests.get(PYTHON_DOWNLOADS, text=PYTHON_HTML_OUTPUT)
 
-        supported = sorted(python_supported_versions())
+        supported = sorted(v for v, _ in python_supported_versions())
 
     assert supported == [
         PyVer(3, 8),
