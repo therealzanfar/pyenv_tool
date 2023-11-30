@@ -109,6 +109,18 @@ from pyenvtool.python import PyVer
             ],
             id="unsupported_bugfix_remove_all",
         ),
+        pytest.param(
+            [PyVer(3, 8), PyVer(3, 9), PyVer(3, 10), PyVer(3, 11), PyVer(3, 12)],
+            [PyVer(3, 7, 13), PyVer(3, 7, 17)],
+            [PyVer(3, 7, 13)],
+            False,
+            False,
+            [
+                (PyVer(3, 7, 13), Op.REMOVE),
+                (PyVer(3, 7, 17), Op.INSTALL),
+            ],
+            id="unsupported_bugfix_upgrade",
+        ),
     ],
 )
 def test_delta(  # noqa: PLR0913

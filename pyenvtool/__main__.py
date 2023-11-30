@@ -153,7 +153,9 @@ def cli_upgrade(
             rprint(f"Removing {v!s}...")
             pyenv_uninstall(v)
 
-        main_versions = {v.main for v in pyenv_installed_versions()}
+        # Upate installed version cache before setting shims
+        installed_versions = set(pyenv_installed_versions())
+        main_versions = {v.main for v in installed_versions}
         latest_versions = sorted(
             (
                 max(v for v in installed_versions if v.main == main)
