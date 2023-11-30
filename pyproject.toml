@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "pyenv_tool"
+name = "pyenvtool"
 version = "0.1.0"
 description = "Convienience wrapper for common pyenv operations."
 authors = ["Matthew Wyant <me@matthewwyant.com>"]
@@ -7,9 +7,6 @@ license = "GPL-3.0-plus"
 
 # https://pypi.org/classifiers/
 classifiers = [
-    # "Development Status :: 1 - Planning",
-    # "Development Status :: 2 - Pre-Alpha",
-    # "Development Status :: 3 - Alpha",
     "Development Status :: 4 - Beta",
     # "Development Status :: 5 - Production/Stable",
     # "Development Status :: 6 - Mature",
@@ -32,8 +29,7 @@ classifiers = [
 
 
 [tool.poetry.scripts]
-pyenvtool = 'pyenv_tool.__main__:cli_main'
-pyenv_tool = 'pyenv_tool.__main__:cli_main' # Legacy alias
+pyenvtool = 'pyenvtool.__main__:cli_main'
 
 [tool.poetry.dependencies]
 python = "^3.8"

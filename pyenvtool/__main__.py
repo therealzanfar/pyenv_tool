@@ -1,15 +1,15 @@
 #! /usr/bin/env python3
 
-"""Console Entry Point for pyenv_tool Utility."""
+"""Console Entry Point for pyenvtool Utility."""
 
 import logging
 import sys
 
 import click
 
-from pyenv_tool import calculate_changes, print_version_report
-from pyenv_tool.cli import CLICK_CONTEXT, rprint, setup_logging
-from pyenv_tool.pyenv import (
+from pyenvtool import calculate_changes, print_version_report
+from pyenvtool.cli import CLICK_CONTEXT, rprint, setup_logging
+from pyenvtool.pyenv import (
     PYENV_NAME,
     Op,
     pyenv_available_versions,
@@ -20,7 +20,7 @@ from pyenv_tool.pyenv import (
     pyenv_uninstall,
     pyenv_update,
 )
-from pyenv_tool.python import python_supported_versions
+from pyenvtool.python import python_supported_versions
 
 
 @click.group(context_settings=CLICK_CONTEXT)

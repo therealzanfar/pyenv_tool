@@ -19,19 +19,21 @@ information. That is, `3.11.0`, `3.11-dev`, and `3.11.2` are all the same
 should be left on the system, but updated if possible, and any supported main
 versions of Python should be installed if absent.
 
-* For every main version that is _supported_ and _not present_ on the system:
-  * The latest bugfix version is installed
+-   For every main version that is _supported_ and _not present_ on the system:
 
-* For every main version that is _supported_ and _present_ on the system:
-  * The latest bugfix version is installed if not already present
-  * Bugfix versions *prior* to the latest are uninstalled, unless the
-    `--keep-bugfix` option is provided
+    -   The latest bugfix version is installed
 
-* For every main version that is _unsupported_ and _present_ on the system:
-  * The latest bugfix version is installed if not already present, unless the
-    `--remove-minor` option is provided
-  * Bugfix versions *prior* to the latest are uninstalled, unless the
-    `--keep-bugfix` option is provided
+-   For every main version that is _supported_ and _present_ on the system:
+
+    -   The latest bugfix version is installed if not already present
+    -   Bugfix versions _prior_ to the latest are uninstalled, unless the
+        `--keep-bugfix` option is provided
+
+-   For every main version that is _unsupported_ and _present_ on the system:
+    -   The latest bugfix version is installed if not already present, unless the
+        `--remove-minor` option is provided
+    -   Bugfix versions _prior_ to the latest are uninstalled, unless the
+        `--keep-bugfix` option is provided
 
 ## Usage
 
@@ -42,36 +44,36 @@ The primary usage will be the `pyenvtool upgrade` command, which will perform
 whatever pyenv operations are required to leave the system with a complete
 array of up-to-date Python executables. By default, this command will:
 
-- Scrape python.org to determine which Python versions are currently supported
-- Update pyenv with the latest list of available versions (and possibly also
+-   Scrape python.org to determine which Python versions are currently supported
+-   Update pyenv with the latest list of available versions (and possibly also
     update the pyenv tool itself).
-- Update any installed Python versions to the latest bugfix version (by
+-   Update any installed Python versions to the latest bugfix version (by
     installing the new version and uninstalling any old versions)
-- Install any supported Python versions, at the latest bugfix, which are not
+-   Install any supported Python versions, at the latest bugfix, which are not
     currently installed
-- Uninstall any unsupported Python versions EXCEPT for the latest bugfix
+-   Uninstall any unsupported Python versions EXCEPT for the latest bugfix
 
 This behavior can be changed with the following command arguments:
 
 `--keep-bugfix/-k`
-    Keep any existing python versions even if a newer bugfix is available.
+Keep any existing python versions even if a newer bugfix is available.
 
 `--remove-minor/-r`
-    Remove ALL unsupported python versions, including the latest bugfix.
+Remove ALL unsupported python versions, including the latest bugfix.
 
 `--no-update`
-    Do not update the pyenv tool or the list of available versions
+Do not update the pyenv tool or the list of available versions
 
 `--dry-run/-n`
-    Check the system and determine the necessary changes, but do not execute
-    them.
+Check the system and determine the necessary changes, but do not execute
+them.
 
 ## Installation
 
-To install `pyenv_tool`, run the following command. `python3` should point to
+To install `pyenvtool`, run the following command. `python3` should point to
 whatever Python binary you want to install it under, version 3.8 or later.
 
-    python3 -m pip install git+https://github.com/therealzanfar/pyenv_tool.git
+    python3 -m pip install git+https://github.com/therealzanfar/pyenvtool.git
 
 ### Prerequisites
 

@@ -1,4 +1,4 @@
-"""Test `pyenv_tool` package test setup."""
+"""Test `pyenvtool` package test setup."""
 
 
 def test_pytest_operation() -> None:

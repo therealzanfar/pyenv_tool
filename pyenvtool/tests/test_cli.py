@@ -1,7 +1,7 @@
-"""Test `pyenv_tool` package CLI tests."""
+"""Test `pyenvtool` package CLI tests."""
 from click.testing import CliRunner
 
-from pyenv_tool.__main__ import cli_main
+from pyenvtool.__main__ import cli_main
 
 
 def test_cli_click() -> None:

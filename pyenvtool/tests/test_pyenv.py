@@ -2,8 +2,8 @@
 
 from pytest_mock.plugin import MockerFixture
 
-from pyenv_tool.pyenv import pyenv_available_versions, pyenv_installed_versions
-from pyenv_tool.python import PyVer
+from pyenvtool.pyenv import pyenv_available_versions, pyenv_installed_versions
+from pyenvtool.python import PyVer
 
 PYENV_INSTALLED_OUTPUT = """system (set by /home/mattwyant/.pyenv/version)
 3.11.1 (set by /home/mattwyant/.pyenv/version)
@@ -76,7 +76,7 @@ PYENV_AVAILABLE_OUTPUT = """Available versions:
 
 
 def test_pyenv_installed(mocker: MockerFixture) -> None:
-    mock_execute = mocker.patch("pyenv_tool.pyenv.pyenv_execute")
+    mock_execute = mocker.patch("pyenvtool.pyenv.pyenv_execute")
     mock_execute.return_value = PYENV_INSTALLED_OUTPUT
 
     installed = sorted(pyenv_installed_versions())
@@ -90,7 +90,7 @@ def test_pyenv_installed(mocker: MockerFixture) -> None:
 
 
 def test_pyenv_available(mocker: MockerFixture) -> None:
-    mock_execute = mocker.patch("pyenv_tool.pyenv.pyenv_execute")
+    mock_execute = mocker.patch("pyenvtool.pyenv.pyenv_execute")
     mock_execute.return_value = PYENV_AVAILABLE_OUTPUT
 
     available = sorted(pyenv_available_versions())

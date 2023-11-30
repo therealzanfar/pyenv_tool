@@ -6,7 +6,7 @@ import subprocess
 from enum import Enum, auto
 from typing import Iterator
 
-from pyenv_tool.python import PyVer
+from pyenvtool.python import PyVer
 
 PYENV_NAME = "pyenv"
 

@@ -2,7 +2,7 @@
 
 import requests_mock
 
-from pyenv_tool.python import PYTHON_DOWNLOADS, PyVer, python_supported_versions
+from pyenvtool.python import PYTHON_DOWNLOADS, PyVer, python_supported_versions
 
 PYTHON_HTML_OUTPUT = """
 <div class="row active-release-list-widget">
