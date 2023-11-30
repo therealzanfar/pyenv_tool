@@ -36,15 +36,21 @@ pyenvtool = 'pyenv_tool.__main__:cli_main'
 pyenv_tool = 'pyenv_tool.__main__:cli_main' # Legacy alias
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.8"
 click = "^8.1.7"
-rich = "^13.6.0"
+rich = "^13.7.0"
+requests = "^2.31.0"
+beautifulsoup4 = "^4.12.2"
 
-[tool.poetry.dev-dependencies]
-black = "^23.9.1"
-mypy = "^1.6.0"
-pytest = "^7.4.2"
-ruff = "^0.0.292"
+[tool.poetry.group.dev.dependencies]
+black = "^23.11.0"
+mypy = "^1.7.1"
+pytest = "^7.4.3"
+pytest-mock = "^3.12.0"
+requests-mock = "^1.11.0"
+ruff = "^0.1.6"
+types-requests = "^2.31.0.10"
+types-beautifulsoup4 = "^4.12.0.7"
 
 [tool.ruff]
 select = [
@@ -90,7 +96,6 @@ ignore = [
     "D400",
     "D406",
     "D407",
-    "PLC1901",
     "UP035",
 ]
 unfixable = ["F401", "F841"]
