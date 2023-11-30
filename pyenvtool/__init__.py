@@ -5,8 +5,8 @@ __email__ = "me@matthewwyant.com"
 __copyright__ = "Copyright 2023, Matthew Wyant"
 __credits__ = [__author__]
 __license__ = "GPL-3.0-plus"
-__version__ = "0.1.0"
-__version_info__ = (0, 1, 0)
+__version__ = "0.1.2"
+__version_info__ = (0, 1, 2)
 __maintainer__ = __author__
 __status__ = "Prototype"
 

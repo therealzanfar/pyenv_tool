@@ -1,9 +1,10 @@
 [tool.poetry]
 name = "pyenvtool"
-version = "0.1.0"
+version = "0.1.2"
 description = "Convienience wrapper for common pyenv operations."
 authors = ["Matthew Wyant <me@matthewwyant.com>"]
 license = "GPL-3.0-plus"
+readme = "README.md"
 
 # https://pypi.org/classifiers/
 classifiers = [
