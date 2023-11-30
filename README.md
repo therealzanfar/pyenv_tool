@@ -73,7 +73,7 @@ them.
 To install `pyenvtool`, run the following command. `python3` should point to
 whatever Python binary you want to install it under, version 3.8 or later.
 
-    python3 -m pip install git+https://github.com/therealzanfar/pyenvtool.git
+    python3 -m pip install pyenvtool
 
 ### Prerequisites
 
