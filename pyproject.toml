@@ -33,21 +33,21 @@ classifiers = [
 pyenvtool = 'pyenvtool.__main__:cli_main'
 
 [tool.poetry.dependencies]
-python = "^3.8"
-click = "^8.1.7"
-rich = "^13.7.0"
-requests = "^2.31.0"
-beautifulsoup4 = "^4.12.2"
+python = "^3.9"
+click = "^8.1"
+rich = "^13.9"
+requests = "^2.32"
+beautifulsoup4 = "^4.12"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.11.0"
-mypy = "^1.7.1"
-pytest = "^7.4.3"
-pytest-mock = "^3.12.0"
-requests-mock = "^1.11.0"
-ruff = "^0.1.6"
-types-requests = "^2.31.0.10"
-types-beautifulsoup4 = "^4.12.0.7"
+black = "^24.10"
+mypy = "^1.13"
+pytest = "^8.3"
+pytest-mock = "^3.14"
+requests-mock = "^1.12"
+ruff = "^0.7"
+types-requests = "^2.32"
+types-beautifulsoup4 = "^4.12"
 
 [tool.ruff]
 select = [
