@@ -20,7 +20,7 @@ from pyenvtool.pyenv import (
     pyenv_uninstall,
     pyenv_update,
 )
-from pyenvtool.python import python_supported_versions
+from pyenvtool.python import PyVer, python_supported_versions
 
 
 @click.group(context_settings=CLICK_CONTEXT)
@@ -154,13 +154,15 @@ def cli_upgrade(
             pyenv_uninstall(v)
 
         main_versions = {v.main for v in pyenv_installed_versions()}
-        latest_versions = sorted(
-            (
-                max(v for v in installed_versions if v.main == main)
-                for main in main_versions
-            ),
-            reverse=True,
-        )
+
+        latest_versions: list[PyVer] = []
+        for main in main_versions:
+            installed = {v for v in installed_versions if v.main == main}
+            if installed:
+                latest_versions.append(
+                    max(installed),
+                )
+        latest_versions.sort(reverse=True)
 
         pyenv_set_shims(*latest_versions)
 
