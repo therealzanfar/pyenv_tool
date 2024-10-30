@@ -148,7 +148,7 @@ class PyVer:
         raise ValueError(f"Invalid SemVer representation: {representation}")
 
 
-class VersionStatus(int, Enum):
+class VersionStatus(str, Enum):
     """Python version support status."""
 
     UNKNOWN = ""
