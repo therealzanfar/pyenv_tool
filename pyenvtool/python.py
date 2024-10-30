@@ -1,7 +1,7 @@
 """Python-related Code."""
 
 import re
-from enum import Enum, auto
+from enum import Enum
 from typing import ClassVar, Iterable, Tuple
 
 import requests
@@ -151,11 +151,11 @@ class PyVer:
 class VersionStatus(int, Enum):
     """Python version support status."""
 
-    UNKNOWN = auto()
-    PRERELEASE = auto()
-    BUGFIX = auto()
-    SECURITY = auto()
-    UNSUPPORTED = auto()
+    UNKNOWN = ""
+    PRERELEASE = "prerelease"
+    BUGFIX = "bugfix"
+    SECURITY = "security"
+    UNSUPPORTED = "unsupported"
 
 VERSION_STATUS_MAPPING = {
     "prerelease": VersionStatus.PRERELEASE,

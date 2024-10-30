@@ -8,7 +8,7 @@ import sys
 import click
 
 from pyenvtool import calculate_changes, print_version_report
-from pyenvtool.cli import CLICK_CONTEXT, rprint, setup_logging
+from pyenvtool.cli import CLICK_CONTEXT, console_print, setup_logging
 from pyenvtool.pyenv import (
     PYENV_NAME,
     Op,
@@ -92,10 +92,10 @@ def cli_upgrade(
     logger.debug("Running with options: %s", ", ".join(f"{k!s}={v!r}" for k, v in args))
 
     if not no_update:
-        rprint("Updating pyenv...")
+        console_print("Updating pyenv...")
         pyenv_update()
 
-    rprint("Scraping supported Python versions...")
+    console_print("Scraping supported Python versions...")
     supported_status = dict(python_supported_versions())
     supported_versions = set(supported_status.keys())
 
@@ -122,14 +122,14 @@ def cli_upgrade(
     )
 
     if len(deltas) <= 0:
-        rprint("No changes required.")
+        console_print("No changes required.")
         return 0
 
     for ver, op in sorted(deltas, reverse=True):
         if op is Op.INSTALL:
-            rprint(f"  + Install [install]{ver.fixed_width}[/install]")
+            console_print(f"  + Install [install]{ver.fixed_width}[/install]")
         elif op is Op.REMOVE:
-            rprint(f"  - Remove  [remove]{ver.fixed_width}[/remove]")
+            console_print(f"  - Remove  [remove]{ver.fixed_width}[/remove]")
         else:
             raise ValueError(f"Unexpected Operation: {op!s}")
 
@@ -144,13 +144,13 @@ def cli_upgrade(
         )
 
         for v in to_install:
-            rprint(f"Installing {v!s}...")
+            console_print(f"Installing {v!s}...")
             out = pyenv_install(v)
             logger.debug(out)
             break
 
         for v in to_remove:
-            rprint(f"Removing {v!s}...")
+            console_print(f"Removing {v!s}...")
             pyenv_uninstall(v)
 
         main_versions = {v.main for v in pyenv_installed_versions()}

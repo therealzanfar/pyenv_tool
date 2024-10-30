@@ -22,7 +22,7 @@ RICH_THEME = Theme(
     inherit=False,
 )
 
-rprint = Console(theme=RICH_THEME).print
+console_print = Console(theme=RICH_THEME).print
 
 
 def setup_logging(verbosity: int = 0, force: bool = False) -> None:
@@ -33,8 +33,9 @@ def setup_logging(verbosity: int = 0, force: bool = False) -> None:
         verbosity (int, optional): The logging level; 0=Error, 1=Warning,
             2=Info, 3+=Debug. Defaults to 0.
 
-        force (bool, optiona): Force the logging level to this value, even
+        force (bool, optional): Force the logging level to this value, even
             if it's currently set to a more permissive value.",
+
     """
     logging_level = logging.ERROR
     if verbosity == 1:
