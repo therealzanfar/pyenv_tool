@@ -1,7 +1,7 @@
 """Python-related Code."""
 
 import re
-from enum import Enum
+from enum import Enum, auto
 from typing import ClassVar, Iterable, Tuple
 
 import requests
@@ -46,7 +46,7 @@ class PyVer:
         re.VERBOSE + re.IGNORECASE,
     )
 
-    def __init__(  # noqa: PLR0913
+    def __init__(
         self,
         major: int,
         minor: int,
@@ -148,13 +148,22 @@ class PyVer:
         raise ValueError(f"Invalid SemVer representation: {representation}")
 
 
-class VersionStatus(str, Enum):
+class VersionStatus(int, Enum):
     """Python version support status."""
 
-    PRERELEASE = "prerelease"
-    BUGFIX = "bugfix"
-    SECURITY = "security"
-    UNSUPPORTED = "unsupported"
+    UNKNOWN = auto()
+    PRERELEASE = auto()
+    BUGFIX = auto()
+    SECURITY = auto()
+    UNSUPPORTED = auto()
+
+VERSION_STATUS_MAPPING = {
+    "prerelease": VersionStatus.PRERELEASE,
+    "pre-release": VersionStatus.PRERELEASE,
+    "bugfix": VersionStatus.BUGFIX,
+    "security": VersionStatus.SECURITY,
+    "unsupported": VersionStatus.UNSUPPORTED,
+}
 
 
 def python_supported_versions() -> Iterable[Tuple[PyVer, VersionStatus]]:
@@ -171,7 +180,13 @@ def python_supported_versions() -> Iterable[Tuple[PyVer, VersionStatus]]:
 
     for li in lis:
         ver = PyVer.parse(li.find("span", class_="release-version").text + ".0")
-        status = VersionStatus(li.find("span", class_="release-status").text)
+
+        status_text: str = li.find("span", class_="release-status").text
+
+        status = VERSION_STATUS_MAPPING.get(
+            status_text,
+            VersionStatus.UNKNOWN,
+        )
 
         if status in [VersionStatus.BUGFIX, VersionStatus.SECURITY]:
             yield (ver, status)
